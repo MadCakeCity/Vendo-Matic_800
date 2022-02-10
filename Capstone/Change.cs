@@ -4,8 +4,9 @@ using System.Text;
 
 namespace Capstone
 {
-    class Inventory
-    {
-        
+    public class Change
+    {//give back money after transaction is complete
+
+
     }
 }

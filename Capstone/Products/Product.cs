@@ -9,7 +9,7 @@ namespace Capstone.Products
         public string Name { get; }
         public decimal Price { get; }
 
-
+        public int Inv { get; set; } = 5;
 
         public Product(string name, decimal price)
         {
