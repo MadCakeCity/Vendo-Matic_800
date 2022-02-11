@@ -74,7 +74,7 @@ namespace Capstone
                 // what should the console display during this??
                 // maybe change the console to reflect "Feeding money" but keeping the balance at the bottom still?
 
-                VendingMachine.FeedMoney(???);
+                
 
 
             }

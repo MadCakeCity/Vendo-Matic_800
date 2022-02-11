@@ -11,6 +11,7 @@ namespace Capstone
         public Dictionary<string,Product> Inventory { get; }
 
         public decimal Balance { get; private set; } = 0;
+        public string PurchaseCode { get; set; }
         
 
         public VendingMachine(string filePath)
@@ -18,22 +19,22 @@ namespace Capstone
             //new inventory dictionary for (slotID and product)
             Inventory = new Dictionary<string, Product>();
 
-            string directory = Environment.CurrentDirectory;
+            string directory = @"C:\Users\Student\workspace\c-sharp-mini-capstone-module-1-team-1";
             string file = filePath;
             string fullPath = Path.Combine(directory,file);
             //Read the input file and sort the products by type
             try
             {
-                using(StreamReader sr = new StreamReader(fullPath))
+                using (StreamReader sr = new StreamReader(fullPath))
                 {
                     while (!sr.EndOfStream)
                     {
                         Product newProduct = null;
                         string line = sr.ReadLine();
-                        string [] pipes = line.Split("|");
-                        
+                        string[] pipes = line.Split("|");
+                        //split the input flie by line
                         string typeOfProduct = pipes[3];
-                        
+
 
                         if (typeOfProduct.Contains("Candy"))
                         {
@@ -52,14 +53,31 @@ namespace Capstone
                             newProduct = new Drink(pipes[1], decimal.Parse(pipes[2]));
                         }
                         Inventory.Add(pipes[0], newProduct);
+
+
+
+                    
+                        Console.WriteLine($"{PurchaseCode}: \n{Inventory[pipes[0]].Name} \nPrice: ${Inventory[pipes[0]].Price} \nQuantity Available: {Inventory[pipes[0]].Inv}\n");   //Inv needs to say SOLD OUT when applicable
                     }
                 }
             }
             catch(Exception ex)
             {
-                Console.WriteLine("");
+                Console.WriteLine(ex.Message);
             }
            
+        }
+        public void CurrentInventory()
+        {
+            // build a for loop
+
+            foreach (KeyValuePair<string, Product> entry in Inventory)
+            {
+                Console.WriteLine($"{PurchaseCode}: \n{Inventory[PurchaseCode].Name} \nPrice: ${Inventory[PurchaseCode].Price} \nQuantity Available: {Inventory[PurchaseCode].Inv}\n");   //Inv needs to say SOLD OUT when applicable
+            }
+
+
+            //Console.WriteLine($"{pipes[0]}: \n{Inventory[pipes[0]].Name} \nPrice: ${Inventory[pipes[0]].Price} \nQuantity Available: {Inventory[pipes[0]].Inv}\n");   //Inv needs to say SOLD OUT when applicable
         }
         //"(1) Feed Money" allows the customer to
         //repeatedly feed money into the machine in valid, whole dollar amounts
@@ -68,27 +86,37 @@ namespace Capstone
             if(money > 0)
             {
                 Balance += money;
-
+                
             }
            
         }
         //"(2) Select Product" allows the customer to select a product to purchase.
         public void SelectProduct(string slotID)
         {
-
-            if (Inventory.ContainsKey(slotID))
+            if (Balance > 0)
             {
-                Inventory[slotID].VendItem();
 
-                
-                Balance -= Inventory[slotID].Price;
+                if (Inventory.ContainsKey(slotID))
+                {
+                    Inventory[slotID].VendItem();
+
+
+                    Balance -= Inventory[slotID].Price;
+                }
             }
         }
         //(3) Finish Transaction" allows the
         //customer to complete the transaction and receive any remaining change
-        public void FinishTransaction()
+        public Change FinishTransaction()
         {
             //give the customer change once change class is complete
+
+
+            Change change = new Change();
+
+            change.ChangeReturn(Balance);
+
+            return change;
         }
         //Finish Transaction....
        

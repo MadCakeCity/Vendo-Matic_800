@@ -16,19 +16,26 @@ namespace Capstone
         public int nickelReturn = 0;
         public int dimeReturn = 0;
         public int quarterReturn = 0;
-        public void ChangeReturn(decimal balance)
+       
+
+       
+
+        public string ChangeReturn(decimal balance)
         {
+            
             int coinReturn = (int)(balance * 100);
-            nickelReturn = coinReturn / 5;
-            coinReturn = coinReturn % 5;
-            dimeReturn = coinReturn / 10;
-            coinReturn = coinReturn % 10;
             quarterReturn = coinReturn / 25;
             coinReturn = coinReturn % 25;
+            dimeReturn = coinReturn / 10;
+            coinReturn = coinReturn % 10;
+            nickelReturn = coinReturn / 5;
+            coinReturn = coinReturn % 5;
+          
+            
 
-            Console.WriteLine($"Returned {quarterReturn} quarters, {dimeReturn} dimes, and {nickelReturn} nickels.");
-
-
+            
+            
+            return $"Returned {quarterReturn} quarters, {dimeReturn} dimes, and {nickelReturn} nickels.";
 
 
         }
