@@ -34,22 +34,24 @@ namespace Capstone
             if (selection.Equals("1"))
             {
                 //VendingMachine vm1 = new VendingMachine();
-                vm.buildInventory();
+                vm.CurrentInventory();
                 MainMenu();
+                selection = Console.ReadLine();
                 // call on the class.method the shows the list of all items in the vending machine with remaining quanity.
             }
             else if (selection.Equals("2"))
             {
                 // go to the Purchase submenu
                 Console.Clear();
-                PurchaseMenu();   // do we want to keep the list of items above?
+                PurchaseMenu();
+                // do we want to keep the list of items above?
             }
             else if (selection.Equals("3"))
             {
                 // exit out of the application
                 Console.Clear();
                 Console.WriteLine("You have exited the Vending Machine application!");
-                System.Environment.Exit(0);
+                Environment.Exit(0);
             }
 
 
@@ -77,7 +79,9 @@ namespace Capstone
             }
 
             if (selection.Equals("1"))
+                
             {
+               
                 // call on the class.method that allows the user to feed money (The FeedMoney() method)
                 // what should the console display during this??
                 // maybe change the console to reflect "Feeding money" but keeping the balance at the bottom still?
@@ -102,7 +106,7 @@ namespace Capstone
 
             }
             else if (selection.Equals("3"))
-            {
+            {       
                 // Finish Transaction
                 // Customer's money is returned using nickels, dimes, quarters (smallest amount of coins possible)
                 // Machine's current balance returns to 0

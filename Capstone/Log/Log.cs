@@ -7,7 +7,7 @@ namespace Capstone.Log
 {
     public class Log
     {
-        static StreamWriter sw = null;
+       
         public static void VendLog(string method, decimal costOfTransaction, decimal balance)
         {
             string directory = Environment.CurrentDirectory;
@@ -20,12 +20,10 @@ namespace Capstone.Log
        
             try
             {
-                using (StreamWriter sw = new StreamWriter(fullPath, true))
+                using (StreamWriter sw = new StreamWriter(fullPath,true))
                 {
-
-
                     DateTime now = DateTime.Now;
-                    sw.WriteLine($"{day}/{month}/{dateTime.Year.ToString()} {now} {method} : {costOfTransaction} {balance}");
+                    sw.WriteLine($"{month}/{day}/{dateTime.Year.ToString()} {now} {method} : ${costOfTransaction} ${balance}");
                 }
 
             }

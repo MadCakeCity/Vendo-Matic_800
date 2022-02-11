@@ -19,9 +19,9 @@ namespace Capstone
             public VendingMachine()
             {
 
-                //buildInventory();        
+                buildInventory();        
 
-                //"C:\\Users\\Student\\Aaron_github\\mini_cap_Vend\\vendingmachines.csv");
+              
 
                 //new inventory dictionary for (slotID and product)
 
@@ -77,7 +77,7 @@ namespace Capstone
                             Inventory.Add(PurchaseCode, newProduct);
 
                             // below is just for debugging purposes
-                            Console.WriteLine($"{PurchaseCode}: \n{Inventory[pipes[0]].Name} \nPrice: ${Inventory[pipes[0]].Price} \nQuantity Available: {Inventory[pipes[0]].Inv}\n");   //Inv needs to say SOLD OUT when applicable
+                            //Console.WriteLine($"{PurchaseCode}: \n{Inventory[pipes[0]].Name} \nPrice: ${Inventory[pipes[0]].Price} \nQuantity Available: {Inventory[pipes[0]].Inv}\n");   //Inv needs to say SOLD OUT when applicable
 
                             // below is just for debugging purposes
                             //Console.WriteLine(newProduct.ItemMessage());
@@ -91,14 +91,14 @@ namespace Capstone
 
 
             }
-
+        
             public void CurrentInventory()
             {
                 // build a for loop
 
                 foreach (KeyValuePair<string, Product> entry in Inventory)
                 {
-                    Console.WriteLine($"{PurchaseCode}: \n{Inventory[PurchaseCode].Name} \nPrice: ${Inventory[PurchaseCode].Price} \nQuantity Available: {Inventory[PurchaseCode].Inv}\n");   //Inv needs to say SOLD OUT when applicable
+                Console.WriteLine($"{entry.Key}: \n{entry.Value.Name} \nPrice: ${entry.Value.Price} \nQuantity Available: {entry.Value.Inv}\n");   //Inv needs to say SOLD OUT when applicable
                 }
 
 
@@ -110,10 +110,16 @@ namespace Capstone
             //repeatedly feed money into the machine in valid, whole dollar amounts
             public void FeedMoney(int money)
             {
-                if (money > 0)
-                {
-                    Balance += money;
-                }
+            if (money == 1 || money == 2 || money == 5 || money == 10)
+            {
+                Balance += money;
+            }
+         
+            else
+            {
+                throw new Exception("Please insert a valid bill...[ $1 | $2 | $5 | $10 ]");
+            }
+            Log.Log.VendLog("FEED MONEY :", money , Balance);
 
                 //accepts on 1s 2s 5s 10s
 
@@ -121,14 +127,16 @@ namespace Capstone
             //"(2) Select Product" allows the customer to select a product to purchase.
             public void SelectProduct(string slotID)
             {
-
+            decimal startBal = Balance;
                 if (Inventory.ContainsKey(slotID))
                 {
                     Inventory[slotID].VendItem();
 
 
                     Balance -= Inventory[slotID].Price;
-                }
+
+            Log.Log.VendLog(Inventory[slotID].Name, startBal, Balance);
+            }
             }
             //(3) Finish Transaction" allows the
             //customer to complete the transaction and receive any remaining change
@@ -136,10 +144,16 @@ namespace Capstone
 
             public Change FinishTransaction()
             {
-                //give the customer change once change class is complete
-                Change change = new Change();
-                change.ChangeReturn(Balance);
-                return change;
+            decimal startBal = Balance;
+            //give the customer change once change class is complete
+            Change change = new Change();
+
+            change.ChangeReturn(Balance);
+
+            Log.Log.VendLog("GIVE CHANGE :", startBal, Balance);
+
+            return change;
+            
             }
 
 

@@ -26,7 +26,7 @@ namespace Capstone.Products
             }
             else
             {
-                //out of stock
+                throw new Exception("That Item Is Out Of Stock, Sorry");
             }
         }
         public abstract string ItemMessage();
