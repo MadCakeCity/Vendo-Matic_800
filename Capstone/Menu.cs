@@ -4,16 +4,21 @@ using System.Text;
 
 namespace Capstone
 {
-    public class Menus
+    public class Menu
     {
+
+        VendingMachine vm = new VendingMachine();
 
         public void MainMenu()
         {
+            //VendingMachine vm = new VendingMachine();
+
             // figure out how to remove this one empty line at the top
             Console.WriteLine("(1) Display Vending Machine Items");
             Console.WriteLine("(2) Purchase");
-            Console.WriteLine("(3) Exit");
+            Console.WriteLine("(3) Exit\n");
             string selection = Console.ReadLine();
+            Console.WriteLine("");
 
             while (!(selection.Equals("1") || selection.Equals("2") || selection.Equals("3")))
             {
@@ -28,13 +33,16 @@ namespace Capstone
 
             if (selection.Equals("1"))
             {
+                //VendingMachine vm1 = new VendingMachine();
+                vm.buildInventory();
+                MainMenu();
                 // call on the class.method the shows the list of all items in the vending machine with remaining quanity.
             }
             else if (selection.Equals("2"))
             {
                 // go to the Purchase submenu
                 Console.Clear();
-                PurchaseMenu();
+                PurchaseMenu();   // do we want to keep the list of items above?
             }
             else if (selection.Equals("3"))
             {
@@ -74,16 +82,23 @@ namespace Capstone
                 // what should the console display during this??
                 // maybe change the console to reflect "Feeding money" but keeping the balance at the bottom still?
 
-                
+                //VendingMachine.FeedMoney();
 
 
             }
             else if (selection.Equals("2"))
             {
+
+                vm.CurrentInventory();   // need to make an if/else statement here to account for if the user doesn't choose to see the list at the beginning, then
+                // build inventory here.  Need to build the inventory BEFORE accessing the menu.
+
+
+
                 // Select Product
                 // calls on method to show the list of available products(and their purchase code?) and allows customer to enter code
                 // If product code doesn't exist, then inform customer and (Thread.Sleep(3000)) - equal to 3 seconds...before returning to Purchase Menu
                 // If product is sold out, then inform customer and (Thread.Sleep(3000)) - equal to 3 seconds...before returning to Purchase Menu
+                // NOTE: can't call the build inventory method because that will restock the VM
 
             }
             else if (selection.Equals("3"))

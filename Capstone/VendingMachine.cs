@@ -4,96 +4,122 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+
+
 namespace Capstone
-{
-    public class VendingMachine
     {
-        public Dictionary<string,Product> Inventory { get; }
-
-        public decimal Balance { get; private set; } = 0;
-        public string PurchaseCode { get; set; }
-        
-
-        public VendingMachine(string filePath)
+        public class VendingMachine
         {
-            //new inventory dictionary for (slotID and product)
-            Inventory = new Dictionary<string, Product>();
+            public Dictionary<string, Product> Inventory { get; } = new Dictionary<string, Product>();
 
-            string directory = @"C:\Users\Student\workspace\c-sharp-mini-capstone-module-1-team-1";
-            string file = filePath;
-            string fullPath = Path.Combine(directory,file);
-            //Read the input file and sort the products by type
-            try
+            public decimal Balance { get; private set; } = 0;
+
+            public string PurchaseCode { get; set; }    // new change
+
+            public VendingMachine()
             {
-                using (StreamReader sr = new StreamReader(fullPath))
+
+                //buildInventory();        
+
+                //"C:\\Users\\Student\\Aaron_github\\mini_cap_Vend\\vendingmachines.csv");
+
+                //new inventory dictionary for (slotID and product)
+
+                //Inventory = new Dictionary<string, Product>();    // look up above
+
+                //string directory = Environment.CurrentDirectory;
+                // string file = filePath;
+                //string fullPath = Path.Combine(directory,filePath);
+                //Read the input file and sort the products by type
+
+
+            }
+
+            public void buildInventory()
+            {
+                string filePath = @"C:\Users\Student\workspace\c-sharp-mini-capstone-module-1-team-1\vendingmachine.csv";
+                // probably want to copy this file to the environment directory so that anyone downloading the code will easily access the file
+
+
+                try
                 {
-                    while (!sr.EndOfStream)
+                    using (StreamReader sr = new StreamReader(filePath))
                     {
-                        Product newProduct = null;
-                        string line = sr.ReadLine();
-                        string[] pipes = line.Split("|");
-                        //split the input flie by line
-                        string typeOfProduct = pipes[3];
-
-
-                        if (typeOfProduct.Contains("Candy"))
+                        while (!sr.EndOfStream)
                         {
-                            newProduct = new Candy(pipes[1], decimal.Parse(pipes[2]));
-                        }
-                        else if (typeOfProduct.Contains("Chip"))
-                        {
-                            newProduct = new Chip(pipes[1], decimal.Parse(pipes[2]));
-                        }
-                        else if (typeOfProduct.Contains("Gum"))
-                        {
-                            newProduct = new Gum(pipes[1], decimal.Parse(pipes[2]));
-                        }
-                        else if (typeOfProduct.Contains("Drink"))
-                        {
-                            newProduct = new Drink(pipes[1], decimal.Parse(pipes[2]));
-                        }
-                        Inventory.Add(pipes[0], newProduct);
+                            Product newProduct = null;   // this is going to reset as null every loop iteration
+                            string line = sr.ReadLine();
+                            //List<string> pipes = new List<string>();
+                            //requires using System.Linq
+                            //pipes = line.Split('|').ToList();
+                            string[] pipes = line.Split("|");
 
 
+                            string typeOfProduct = pipes[3];
+                            PurchaseCode = pipes[0];   // new change
 
-                    
-                        Console.WriteLine($"{PurchaseCode}: \n{Inventory[pipes[0]].Name} \nPrice: ${Inventory[pipes[0]].Price} \nQuantity Available: {Inventory[pipes[0]].Inv}\n");   //Inv needs to say SOLD OUT when applicable
+                            if (typeOfProduct.Contains("Candy"))
+                            {
+                                newProduct = new Candy(pipes[1], decimal.Parse(pipes[2]));
+                            }
+                            else if (typeOfProduct.Contains("Chip"))
+                            {
+                                newProduct = new Chip(pipes[1], decimal.Parse(pipes[2]));
+                            }
+                            else if (typeOfProduct.Contains("Gum"))
+                            {
+                                newProduct = new Gum(pipes[1], decimal.Parse(pipes[2]));
+                            }
+                            else if (typeOfProduct.Contains("Drink"))
+                            {
+                                newProduct = new Drink(pipes[1], decimal.Parse(pipes[2]));
+                            }
+                            Inventory.Add(PurchaseCode, newProduct);
+
+                            // below is just for debugging purposes
+                            Console.WriteLine($"{PurchaseCode}: \n{Inventory[pipes[0]].Name} \nPrice: ${Inventory[pipes[0]].Price} \nQuantity Available: {Inventory[pipes[0]].Inv}\n");   //Inv needs to say SOLD OUT when applicable
+
+                            // below is just for debugging purposes
+                            //Console.WriteLine(newProduct.ItemMessage());
+                        }
                     }
                 }
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-           
-        }
-        public void CurrentInventory()
-        {
-            // build a for loop
-
-            foreach (KeyValuePair<string, Product> entry in Inventory)
-            {
-                Console.WriteLine($"{PurchaseCode}: \n{Inventory[PurchaseCode].Name} \nPrice: ${Inventory[PurchaseCode].Price} \nQuantity Available: {Inventory[PurchaseCode].Inv}\n");   //Inv needs to say SOLD OUT when applicable
-            }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Testing that this works");
+                }
 
 
-            //Console.WriteLine($"{pipes[0]}: \n{Inventory[pipes[0]].Name} \nPrice: ${Inventory[pipes[0]].Price} \nQuantity Available: {Inventory[pipes[0]].Inv}\n");   //Inv needs to say SOLD OUT when applicable
-        }
-        //"(1) Feed Money" allows the customer to
-        //repeatedly feed money into the machine in valid, whole dollar amounts
-        public void FeedMoney(decimal money)
-        {
-            if(money > 0)
-            {
-                Balance += money;
-                
             }
-           
-        }
-        //"(2) Select Product" allows the customer to select a product to purchase.
-        public void SelectProduct(string slotID)
-        {
-            if (Balance > 0)
+
+            public void CurrentInventory()
+            {
+                // build a for loop
+
+                foreach (KeyValuePair<string, Product> entry in Inventory)
+                {
+                    Console.WriteLine($"{PurchaseCode}: \n{Inventory[PurchaseCode].Name} \nPrice: ${Inventory[PurchaseCode].Price} \nQuantity Available: {Inventory[PurchaseCode].Inv}\n");   //Inv needs to say SOLD OUT when applicable
+                }
+
+
+                //Console.WriteLine($"{pipes[0]}: \n{Inventory[pipes[0]].Name} \nPrice: ${Inventory[pipes[0]].Price} \nQuantity Available: {Inventory[pipes[0]].Inv}\n");   //Inv needs to say SOLD OUT when applicable
+            }
+
+
+            //"(1) Feed Money" allows the customer to
+            //repeatedly feed money into the machine in valid, whole dollar amounts
+            public void FeedMoney(int money)
+            {
+                if (money > 0)
+                {
+                    Balance += money;
+                }
+
+                //accepts on 1s 2s 5s 10s
+
+            }
+            //"(2) Select Product" allows the customer to select a product to purchase.
+            public void SelectProduct(string slotID)
             {
 
                 if (Inventory.ContainsKey(slotID))
@@ -104,25 +130,23 @@ namespace Capstone
                     Balance -= Inventory[slotID].Price;
                 }
             }
+            //(3) Finish Transaction" allows the
+            //customer to complete the transaction and receive any remaining change
+
+
+            public Change FinishTransaction()
+            {
+                //give the customer change once change class is complete
+                Change change = new Change();
+                change.ChangeReturn(Balance);
+                return change;
+            }
+
+
         }
-        //(3) Finish Transaction" allows the
-        //customer to complete the transaction and receive any remaining change
-        public Change FinishTransaction()
-        {
-            //give the customer change once change class is complete
 
-
-            Change change = new Change();
-
-            change.ChangeReturn(Balance);
-
-            return change;
-        }
-        //Finish Transaction....
-       
     }
 
-}
 /*A1|Potato Crisps|3.05|Chip
 A2|Stackers|1.45|Chip
 A3|Grain Waves|2.75|Chip
