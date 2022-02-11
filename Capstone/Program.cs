@@ -6,7 +6,9 @@ namespace Capstone
     {
         static void Main(string[] args)
         {
+            //input file for reading in VendingMachine
             VendingMachine vm = new VendingMachine("vendingmachine.csv");
+            
         }
     }
 }

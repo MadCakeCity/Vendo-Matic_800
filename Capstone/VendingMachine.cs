@@ -15,12 +15,13 @@ namespace Capstone
 
         public VendingMachine(string filePath)
         {
+            //new inventory dictionary for (slotID and product)
             Inventory = new Dictionary<string, Product>();
 
             string directory = Environment.CurrentDirectory;
             string file = filePath;
             string fullPath = Path.Combine(directory,file);
-
+            //Read the input file and sort the products by type
             try
             {
                 using(StreamReader sr = new StreamReader(fullPath))
@@ -60,6 +61,8 @@ namespace Capstone
             }
            
         }
+        //"(1) Feed Money" allows the customer to
+        //repeatedly feed money into the machine in valid, whole dollar amounts
         public void FeedMoney(decimal money)
         {
             if(money > 0)
@@ -68,6 +71,24 @@ namespace Capstone
 
             }
            
+        }
+        //"(2) Select Product" allows the customer to select a product to purchase.
+        public void SelectProduct(string slotID)
+        {
+
+            if (Inventory.ContainsKey(slotID))
+            {
+                Inventory[slotID].VendItem();
+
+                
+                Balance -= Inventory[slotID].Price;
+            }
+        }
+        //(3) Finish Transaction" allows the
+        //customer to complete the transaction and receive any remaining change
+        public void FinishTransaction()
+        {
+            //give the customer change once change class is complete
         }
         //Finish Transaction....
        

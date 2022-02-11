@@ -8,7 +8,7 @@ namespace Capstone.Products
     {
         public Gum(string name, decimal price) : base(name, price)
         {
-
+            
         }
         public override string ItemMessage()
         {
