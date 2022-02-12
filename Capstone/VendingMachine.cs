@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 
 
@@ -12,9 +13,9 @@ namespace Capstone
         {
             public Dictionary<string, Product> Inventory { get; } = new Dictionary<string, Product>();
 
-            public decimal Balance { get; private set; } = 0;
+            public decimal Balance { get; private set; } = 0.00M;    //let's see where else we need to change this to have 2 decimal places and 'M'
 
-            public string PurchaseCode { get; set; }    // new change
+            public string SlotID { get; set; }    // new change
 
             public VendingMachine()
             {
@@ -56,7 +57,7 @@ namespace Capstone
 
 
                             string typeOfProduct = pipes[3];
-                            PurchaseCode = pipes[0];   // new change
+                            SlotID = pipes[0];   // new change
 
                             if (typeOfProduct.Contains("Candy"))
                             {
@@ -74,7 +75,7 @@ namespace Capstone
                             {
                                 newProduct = new Drink(pipes[1], decimal.Parse(pipes[2]));
                             }
-                            Inventory.Add(PurchaseCode, newProduct);
+                            Inventory.Add(SlotID, newProduct);
 
                             // below is just for debugging purposes
                             //Console.WriteLine($"{PurchaseCode}: \n{Inventory[pipes[0]].Name} \nPrice: ${Inventory[pipes[0]].Price} \nQuantity Available: {Inventory[pipes[0]].Inv}\n");   //Inv needs to say SOLD OUT when applicable
@@ -86,7 +87,7 @@ namespace Capstone
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Testing that this works");
+                    Console.WriteLine("The exception shows up here");
                 }
 
 
@@ -108,51 +109,61 @@ namespace Capstone
 
             //"(1) Feed Money" allows the customer to
             //repeatedly feed money into the machine in valid, whole dollar amounts
-            public void FeedMoney(int money)
+            public void FeedMoney(decimal money)
             {
-            if (money == 1 || money == 2 || money == 5 || money == 10)
-            {
-                Balance += money;
-            }
-         
-            else
-            {
-                throw new Exception("Please insert a valid bill...[ $1 | $2 | $5 | $10 ]");
-            }
-            Log.Log.VendLog("FEED MONEY :", money , Balance);
+    
+                Balance += money;    
+                Log.Log.VendLog("FEED MONEY :", money , Balance);
 
-                //accepts on 1s 2s 5s 10s
+                    //accepts on 1s 2s 5s 10s
 
             }
             //"(2) Select Product" allows the customer to select a product to purchase.
             public void SelectProduct(string slotID)
             {
-            decimal startBal = Balance;
+                SlotID = slotID;
+                decimal startBal = Balance;
                 if (Inventory.ContainsKey(slotID))
                 {
-                    Inventory[slotID].VendItem();
+                    Inventory[slotID].VendItem();  //VendItem doesn't need to be here until it's confirmed user has enough funds in balance
 
+                    if (startBal < Inventory[slotID].Price)
+                    {
+                        Console.WriteLine($"\nInsufficient funds!\n{Inventory[slotID].Name} is ${Inventory[slotID].Price} | Current Balance: ${startBal}");
+                        Thread.Sleep(3000);   //then return to Purchase Menu
+                    }
+                    else
+                    {
+                        Balance -= Inventory[slotID].Price;   // might want to make this startBal instead of Balance???
+                        Inventory[slotID].VendItem();
+                        Log.Log.VendLog(Inventory[slotID].Name, startBal, Balance);  // moved this up here
+                    }
+                }            
+                else
+                {
+                    Console.WriteLine("Invalid Product Entered!");   // then return to the Purchase menu
+                
+                }
 
-                    Balance -= Inventory[slotID].Price;
-
-            Log.Log.VendLog(Inventory[slotID].Name, startBal, Balance);
+            //Log.Log.VendLog(Inventory[slotID].Name, startBal, Balance);     // does it need to log if no transaction took place???
             }
-            }
+
+            
             //(3) Finish Transaction" allows the
             //customer to complete the transaction and receive any remaining change
 
 
             public Change FinishTransaction()
             {
-            decimal startBal = Balance;
-            //give the customer change once change class is complete
-            Change change = new Change();
+                decimal startBal = Balance;
+                //give the customer change once change class is complete
+                Change change = new Change();
 
-            change.ChangeReturn(Balance);
+                change.ChangeReturn(Balance);
 
-            Log.Log.VendLog("GIVE CHANGE :", startBal, Balance);
+                Log.Log.VendLog("GIVE CHANGE :", startBal, Balance);
 
-            return change;
+                return change;
             
             }
 

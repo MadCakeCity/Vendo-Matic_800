@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Capstone
 {
@@ -63,7 +64,7 @@ namespace Capstone
             Console.WriteLine("(1) Feed Money");
             Console.WriteLine("(2) Select Product");
             Console.WriteLine("(3) Finish Transaction");
-            Console.WriteLine("\nCurrent Money Provided: ");     // have to get the balance to return to this string!!!
+            Console.WriteLine($"\nCurrent Money Provided: ${vm.Balance}\n");     // have to get the balance to return to this string!!!
             string selection = Console.ReadLine();
 
 
@@ -78,15 +79,22 @@ namespace Capstone
                 Console.Clear();
             }
 
-            if (selection.Equals("1"))
+            if (selection.Equals("1"))    // Feeding money Menu
                 
             {
-               
+
                 // call on the class.method that allows the user to feed money (The FeedMoney() method)
                 // what should the console display during this??
                 // maybe change the console to reflect "Feeding money" but keeping the balance at the bottom still?
 
-                //VendingMachine.FeedMoney();
+
+                decimal money = (Decimal.Parse(FeedingMoneyMenu()));   // nesting the FeedingMoneyMenu in this argument because it returns a string for the decimal variable to parse
+                vm.FeedMoney(money);
+
+                Console.Clear();
+                PurchaseMenu();
+
+
 
 
             }
@@ -96,7 +104,11 @@ namespace Capstone
                 vm.CurrentInventory();   // need to make an if/else statement here to account for if the user doesn't choose to see the list at the beginning, then
                 // build inventory here.  Need to build the inventory BEFORE accessing the menu.
 
-
+                selection = Console.ReadLine();
+                
+                
+                
+                vm.SelectProduct(selection);
 
                 // Select Product
                 // calls on method to show the list of available products(and their purchase code?) and allows customer to enter code
@@ -112,9 +124,70 @@ namespace Capstone
                 // Machine's current balance returns to 0
             }
 
+
         }
 
 
+        public string FeedingMoneyMenu()
+        {
+
+            Console.Clear();
+            Console.WriteLine("Please insert a valid bill [ $1 | $2 | $5 | $10 ]\n\n");
+            Console.WriteLine($"\nCurrent Money Provided: ${vm.Balance}\n");
+            Console.Write("Insert: ");
+            string inputMoney = Console.ReadLine();
+
+            while (!(inputMoney.Equals("1") || inputMoney.Equals("2") || inputMoney.Equals("5") || inputMoney.Equals("10")))
+            {
+                Console.Write("\n(Not a valid bill)");
+                Thread.Sleep(3000);
+                Console.Clear();
+                Console.WriteLine("Please insert a valid bill [ $1 | $2 | $5 | $10 ]\n\n");
+                Console.WriteLine($"\nCurrent Money Provided: ${vm.Balance}\n");
+                Console.Write("Insert: ");
+                inputMoney = Console.ReadLine();
+
+            }
+
+            return inputMoney;
+
+        }
+
+
+        public string SelectProductMenu(string slotID)
+        {
+            //vm.SlotID = slotID;
+            decimal startBal = vm.Balance;
+            if (vm.Inventory.ContainsKey(slotID))
+            {
+                //vm.Inventory[slotID].VendItem();  //slotID
+
+                if (startBal < vm.Inventory[slotID].Price)
+                {
+                    Console.WriteLine($"\nInsufficient funds!\n{vm.Inventory[slotID].Name} is ${vm.Inventory[slotID].Price} | Current Balance: ${startBal}");
+                    Thread.Sleep(3000);
+                    PurchaseMenu();    //then return to Purchase Menu
+                }
+                else
+                {
+                    // call on the SelectProduct method from VendingMachine class
+                    vm.SelectProduct(slotID);
+
+                    /*vm.Balance -= vm.Inventory.[slotID].Price;   // might want to make this startBal instead of Balance???
+                    vm.Inventory[slotID].VendItem();
+                    Log.Log.VendLog(vm.Inventory[slotID].Name, startBal, vm.Balance);  // moved this up here*/
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid Product Entered!");   // then return to the Purchase menu
+                PurchaseMenu();
+            }
+
+
+
+            return "";
+        }
 
     }
 }
