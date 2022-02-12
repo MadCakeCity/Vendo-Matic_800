@@ -35,7 +35,9 @@ namespace Capstone
             if (selection.Equals("1"))
             {
                 //VendingMachine vm1 = new VendingMachine();
+                Console.Clear();
                 vm.CurrentInventory();
+                Console.WriteLine("\n\n");
                 MainMenu();
                 selection = Console.ReadLine();
                 // call on the class.method the shows the list of all items in the vending machine with remaining quanity.
@@ -75,8 +77,13 @@ namespace Capstone
                 // can add a message here if needed but was thinking might leave out a message for a Vending Machine?
                 // maybe clear what was entered 
 
-                selection = Console.ReadLine();
                 Console.Clear();
+                PurchaseMenu();
+                selection = Console.ReadLine();
+
+
+               /* selection = Console.ReadLine();
+                Console.Clear();*/
             }
 
             if (selection.Equals("1"))    // Feeding money Menu
@@ -101,14 +108,17 @@ namespace Capstone
             else if (selection.Equals("2"))
             {
 
+                Console.WriteLine("");
                 vm.CurrentInventory();   // need to make an if/else statement here to account for if the user doesn't choose to see the list at the beginning, then
                 // build inventory here.  Need to build the inventory BEFORE accessing the menu.
 
+                Console.Write("\n\nEnter Purchase Code: ");
                 selection = Console.ReadLine();
+
+
+                SelectProductMenu(selection);
                 
-                
-                
-                vm.SelectProduct(selection);
+                //vm.SelectProduct(selection);
 
                 // Select Product
                 // calls on method to show the list of available products(and their purchase code?) and allows customer to enter code
@@ -154,7 +164,7 @@ namespace Capstone
         }
 
 
-        public string SelectProductMenu(string slotID)
+        public void SelectProductMenu(string slotID)
         {
             //vm.SlotID = slotID;
             decimal startBal = vm.Balance;
@@ -162,16 +172,34 @@ namespace Capstone
             {
                 //vm.Inventory[slotID].VendItem();  //slotID
 
-                if (startBal < vm.Inventory[slotID].Price)
+                if (vm.Inventory[slotID].Inv <= 0)
                 {
-                    Console.WriteLine($"\nInsufficient funds!\n{vm.Inventory[slotID].Name} is ${vm.Inventory[slotID].Price} | Current Balance: ${startBal}");
-                    Thread.Sleep(3000);
+                    Console.WriteLine("SORRY, THAT ITEM IS CURRENTLY OUT OF STOCK!");
+                    Thread.Sleep(4000);
+                    Console.Clear();
                     PurchaseMenu();    //then return to Purchase Menu
                 }
+
+                if (vm.Inventory[slotID].Inv > 0 && startBal < vm.Inventory[slotID].Price)
+                {
+                    Console.WriteLine($"\nInsufficient funds!\n{vm.Inventory[slotID].Name} is ${vm.Inventory[slotID].Price} | Current Balance: ${startBal}");
+                    Thread.Sleep(5000);
+                    Console.Clear();
+                    PurchaseMenu();    //then return to Purchase Menu
+
+                }
+                    
                 else
                 {
                     // call on the SelectProduct method from VendingMachine class
                     vm.SelectProduct(slotID);
+                    // print the message from the product here
+                    Console.WriteLine(vm.Inventory[slotID].ItemMessage());
+                    Thread.Sleep(3000);
+                    Console.Clear();
+                    PurchaseMenu();
+
+
 
                     /*vm.Balance -= vm.Inventory.[slotID].Price;   // might want to make this startBal instead of Balance???
                     vm.Inventory[slotID].VendItem();
@@ -180,13 +208,13 @@ namespace Capstone
             }
             else
             {
-                Console.WriteLine("Invalid Product Entered!");   // then return to the Purchase menu
+                Console.WriteLine("\n\n(Invalid Product Entered!)\n\n\n");   // then return to the Purchase menu
+                Thread.Sleep(3000);
+                Console.Clear();
                 PurchaseMenu();
+
             }
 
-
-
-            return "";
         }
 
     }

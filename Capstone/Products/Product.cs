@@ -15,20 +15,17 @@ namespace Capstone.Products
         {
             Name = name;
             Price = price;
-            Inv = 5;
+            //Inv = 5;
+
+            //Only for testing purposes:
+            Inv = 2;
 
         }
         public void VendItem()
         {
-            if(Inv > 0)
-            {
-                Inv--;
-            }
-            else
-            {
-                throw new Exception("That Item Is Out Of Stock, Sorry");
-            }
+            Inv--;
         }
+
         public abstract string ItemMessage();
     }
 }
