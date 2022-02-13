@@ -30,13 +30,28 @@ namespace Capstone
             coinReturn = coinReturn % 10;
             nickelReturn = coinReturn / 5;
             coinReturn = coinReturn % 5;
-          
-            
 
-            
-            
-            return $"Returned {quarterReturn} quarters, {dimeReturn} dimes, and {nickelReturn} nickels.";
 
+            //return $"Returned: {quarterReturn} quarters, {dimeReturn} dimes, and {nickelReturn} nickels.";
+
+            string returnedCoins = "\n-----------------\n|  Coin Return  |\n-----------------";
+
+            if (quarterReturn > 0) 
+            {
+                returnedCoins += $"\n  Quarters: {quarterReturn}";
+            }
+            if (dimeReturn > 0)
+            {
+                returnedCoins += $"\n     Dimes: {dimeReturn}";
+            }
+            if (nickelReturn > 0)
+            {
+                returnedCoins += $"\n   Nickels: {nickelReturn}";
+            }
+
+            return returnedCoins;
+
+            //return $"Coin Return: \nQuarters: {quarterReturn}\nDimes: {dimeReturn}\nNickels: {nickelReturn}";
 
         }
 

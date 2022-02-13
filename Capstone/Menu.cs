@@ -10,6 +10,14 @@ namespace Capstone
 
         VendingMachine vm = new VendingMachine();
 
+
+        public void WelcomeMessage()
+        {
+            Console.WriteLine("\n\n\n\n\n\n\n\n\n\n");
+            Console.WriteLine("\t\t\t\t\tWELCOME TO THE VENDO-MATIC 800");
+            Console.WriteLine("\n\n\n\n\n\n\n\n\n\n");
+        }
+
         public void MainMenu()
         {
             //VendingMachine vm = new VendingMachine();
@@ -53,7 +61,7 @@ namespace Capstone
             {
                 // exit out of the application
                 Console.Clear();
-                Console.WriteLine("You have exited the Vending Machine application!");
+                Console.WriteLine("Thank you for using the VENDO-MATIC 800!");
                 Environment.Exit(0);
             }
 
@@ -128,10 +136,17 @@ namespace Capstone
 
             }
             else if (selection.Equals("3"))
-            {       
+            {
                 // Finish Transaction
                 // Customer's money is returned using nickels, dimes, quarters (smallest amount of coins possible)
                 // Machine's current balance returns to 0
+
+                Console.Clear();
+                vm.FinishTransaction();
+                Thread.Sleep(5000);
+                Console.Clear();
+                MainMenu();
+
             }
 
 
@@ -199,16 +214,11 @@ namespace Capstone
                     Console.Clear();
                     PurchaseMenu();
 
-
-
-                    /*vm.Balance -= vm.Inventory.[slotID].Price;   // might want to make this startBal instead of Balance???
-                    vm.Inventory[slotID].VendItem();
-                    Log.Log.VendLog(vm.Inventory[slotID].Name, startBal, vm.Balance);  // moved this up here*/
                 }
             }
             else
             {
-                Console.WriteLine("\n\n(Invalid Product Entered!)\n\n\n");   // then return to the Purchase menu
+                Console.WriteLine("\n\n(Invalid Product Entered!)");   // then return to the Purchase menu
                 Thread.Sleep(3000);
                 Console.Clear();
                 PurchaseMenu();

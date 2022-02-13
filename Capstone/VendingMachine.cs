@@ -146,47 +146,24 @@ namespace Capstone
 
             }
 
-            /*if (Inventory.ContainsKey(slotID))
-            {
-                //Inventory[slotID].VendItem();  //VendItem doesn't need to be here until it's confirmed user has enough funds in balance
-
-                if (startBal < Inventory[slotID].Price)
-                {
-                    Console.WriteLine($"\nInsufficient funds!\n{Inventory[slotID].Name} is ${Inventory[slotID].Price} | Current Balance: ${startBal}");
-                    Thread.Sleep(3000);   //then return to Purchase Menu
-                }
-                else
-                {
-                    Balance -= Inventory[slotID].Price;   // might want to make this startBal instead of Balance???
-                    Inventory[slotID].VendItem();
-                    Log.Log.VendLog(Inventory[slotID].Name, startBal, Balance);  // moved this up here
-                }
-            }            
-            else
-            {
-                Console.WriteLine("Invalid Product Entered!");   // then return to the Purchase menu
-
-            }*/
-
-            //Log.Log.VendLog(Inventory[slotID].Name, startBal, Balance);     // does it need to log if no transaction took place???
-        
-
             
-            //(3) Finish Transaction" allows the
-            //customer to complete the transaction and receive any remaining change
 
 
-            public Change FinishTransaction()
-            {
+            public void FinishTransaction()    //changing to void becuase the Console.WriteLine will give me the returned message from the Change class' ChangeReturn method   // public Change FinishTransaction()
+        {
                 decimal startBal = Balance;
                 //give the customer change once change class is complete
                 Change change = new Change();
 
-                change.ChangeReturn(Balance);
+                Console.WriteLine(change.ChangeReturn(Balance));
+                //change.ChangeReturn(Balance);
+                Balance = 0.00M;
+
+                Console.WriteLine($"\nCurrent Money Provided: {Balance}");
 
                 Log.Log.VendLog("GIVE CHANGE :", startBal, Balance);
 
-                return change;
+                //return change;
             
             }
 
