@@ -20,8 +20,8 @@ namespace Capstone
             public VendingMachine()
             {
 
-                buildInventory();        
-
+                //buildInventory();        
+                // taking this out. will call on it manually.
               
 
                 //new inventory dictionary for (slotID and product)
@@ -87,7 +87,10 @@ namespace Capstone
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("The exception shows up here");
+                    Console.WriteLine("The Inventory data could not be aquired! The VENDO-MATIC 800 will shut down now!");
+                    Thread.Sleep(4000);
+                    Environment.Exit(0);
+
                 }
 
 

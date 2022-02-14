@@ -15,10 +15,10 @@ namespace Capstone.Products
         {
             Name = name;
             Price = price;
-            //Inv = 5;
+            Inv = 5;
 
             //Only for testing purposes:
-            Inv = 2;
+            //Inv = 2;
 
         }
         public void VendItem()

@@ -7,8 +7,16 @@ namespace Capstone
 {
     public class Menu
     {
+        public VendingMachine VM { get; } = new VendingMachine();
 
-        VendingMachine vm = new VendingMachine();
+        public Menu(VendingMachine vm) 
+        {
+            VM = vm;
+            
+            //VendingMachine VM = new VendingMachine();
+        }
+
+        
 
 
         public void WelcomeMessage()
@@ -20,7 +28,7 @@ namespace Capstone
 
         public void MainMenu()
         {
-            //VendingMachine vm = new VendingMachine();
+            //VendingMachine VM = new VendingMachine();
 
             // figure out how to remove this one empty line at the top
             Console.WriteLine("(1) Display Vending Machine Items");
@@ -42,9 +50,9 @@ namespace Capstone
 
             if (selection.Equals("1"))
             {
-                //VendingMachine vm1 = new VendingMachine();
+                //VendingMachine VM1 = new VendingMachine();
                 Console.Clear();
-                vm.CurrentInventory();
+                VM.CurrentInventory();
                 Console.WriteLine("\n\n");
                 MainMenu();
                 selection = Console.ReadLine();
@@ -74,7 +82,7 @@ namespace Capstone
             Console.WriteLine("(1) Feed Money");
             Console.WriteLine("(2) Select Product");
             Console.WriteLine("(3) Finish Transaction");
-            Console.WriteLine($"\nCurrent Money Provided: ${vm.Balance}\n");     // have to get the balance to return to this string!!!
+            Console.WriteLine($"\nCurrent Money Provided: ${VM.Balance}\n");     // have to get the balance to return to this string!!!
             string selection = Console.ReadLine();
 
 
@@ -104,7 +112,7 @@ namespace Capstone
 
 
                 decimal money = (Decimal.Parse(FeedingMoneyMenu()));   // nesting the FeedingMoneyMenu in this argument because it returns a string for the decimal variable to parse
-                vm.FeedMoney(money);
+                VM.FeedMoney(money);
 
                 Console.Clear();
                 PurchaseMenu();
@@ -117,7 +125,7 @@ namespace Capstone
             {
 
                 Console.WriteLine("");
-                vm.CurrentInventory();   // need to make an if/else statement here to account for if the user doesn't choose to see the list at the beginning, then
+                VM.CurrentInventory();   // need to make an if/else statement here to account for if the user doesn't choose to see the list at the beginning, then
                 // build inventory here.  Need to build the inventory BEFORE accessing the menu.
 
                 Console.Write("\n\nEnter Purchase Code: ");
@@ -126,7 +134,7 @@ namespace Capstone
 
                 SelectProductMenu(selection);
                 
-                //vm.SelectProduct(selection);
+                //VM.SelectProduct(selection);
 
                 // Select Product
                 // calls on method to show the list of available products(and their purchase code?) and allows customer to enter code
@@ -142,7 +150,7 @@ namespace Capstone
                 // Machine's current balance returns to 0
 
                 Console.Clear();
-                vm.FinishTransaction();
+                VM.FinishTransaction();
                 Thread.Sleep(5000);
                 Console.Clear();
                 MainMenu();
@@ -158,7 +166,7 @@ namespace Capstone
 
             Console.Clear();
             Console.WriteLine("Please insert a valid bill [ $1 | $2 | $5 | $10 ]\n\n");
-            Console.WriteLine($"\nCurrent Money Provided: ${vm.Balance}\n");
+            Console.WriteLine($"\nCurrent Money Provided: ${VM.Balance}\n");
             Console.Write("Insert: ");
             string inputMoney = Console.ReadLine();
 
@@ -168,7 +176,7 @@ namespace Capstone
                 Thread.Sleep(3000);
                 Console.Clear();
                 Console.WriteLine("Please insert a valid bill [ $1 | $2 | $5 | $10 ]\n\n");
-                Console.WriteLine($"\nCurrent Money Provided: ${vm.Balance}\n");
+                Console.WriteLine($"\nCurrent Money Provided: ${VM.Balance}\n");
                 Console.Write("Insert: ");
                 inputMoney = Console.ReadLine();
 
@@ -181,13 +189,13 @@ namespace Capstone
 
         public void SelectProductMenu(string slotID)
         {
-            //vm.SlotID = slotID;
-            decimal startBal = vm.Balance;
-            if (vm.Inventory.ContainsKey(slotID))
+            //VM.SlotID = slotID;
+            decimal startBal = VM.Balance;
+            if (VM.Inventory.ContainsKey(slotID))
             {
-                //vm.Inventory[slotID].VendItem();  //slotID
+                //VM.Inventory[slotID].VendItem();  //slotID
 
-                if (vm.Inventory[slotID].Inv <= 0)
+                if (VM.Inventory[slotID].Inv <= 0)
                 {
                     Console.WriteLine("SORRY, THAT ITEM IS CURRENTLY OUT OF STOCK!");
                     Thread.Sleep(4000);
@@ -195,9 +203,9 @@ namespace Capstone
                     PurchaseMenu();    //then return to Purchase Menu
                 }
 
-                if (vm.Inventory[slotID].Inv > 0 && startBal < vm.Inventory[slotID].Price)
+                if (VM.Inventory[slotID].Inv > 0 && startBal < VM.Inventory[slotID].Price)
                 {
-                    Console.WriteLine($"\nInsufficient funds!\n{vm.Inventory[slotID].Name} is ${vm.Inventory[slotID].Price} | Current Balance: ${startBal}");
+                    Console.WriteLine($"\nInsufficient funds!\n{VM.Inventory[slotID].Name} is ${VM.Inventory[slotID].Price} | Current Balance: ${startBal}");
                     Thread.Sleep(5000);
                     Console.Clear();
                     PurchaseMenu();    //then return to Purchase Menu
@@ -207,9 +215,9 @@ namespace Capstone
                 else
                 {
                     // call on the SelectProduct method from VendingMachine class
-                    vm.SelectProduct(slotID);
+                    VM.SelectProduct(slotID);
                     // print the message from the product here
-                    Console.WriteLine(vm.Inventory[slotID].ItemMessage());
+                    Console.WriteLine(VM.Inventory[slotID].ItemMessage());
                     Thread.Sleep(3000);
                     Console.Clear();
                     PurchaseMenu();
